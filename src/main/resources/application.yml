@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: papelaria.app
+
+  profiles:
+    active: "local"
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+      ddl-auto: update
+      format_sql: false

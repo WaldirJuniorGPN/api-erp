@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: papelaria
+      MYSQL_USER: user
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    command: >
+      bash -c "echo 'GRANT ALL PRIVILEGES ON *.* TO \"user\"@\"%\" WITH GRANT OPTION;' > /docker-entrypoint-initdb.d/init.sql
+      && echo 'FLUSH PRIVILEGES;' >> /docker-entrypoint-initdb.d/init.sql
+      && docker-entrypoint.sh mysqld"
