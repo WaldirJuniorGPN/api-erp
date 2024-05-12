@@ -42,10 +42,10 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Override
     public ResponseEntity<ResponseClientePfDTO> cadastrar(RequestClientePfDTO dados, UriComponentsBuilder uriComponentsBuilder) {
         var cliente = this.modelMapper.map(dados, ClientePF.class);
-        var endereco = this.enderecoService.buscaEndereco(dados.endereco().cep());
+        var endereco = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
         cliente.setEndereco(endereco);
         this.repository.save(cliente);
-        var uri = uriComponentsBuilder.path("/clientepf/{id}").buildAndExpand(cliente.getId()).toUri();
+        var uri = uriComponentsBuilder.path("/clientepf/{idAtendente}").buildAndExpand(cliente.getId()).toUri();
         var dto = this.modelMapper.map(cliente, ResponseClientePfDTO.class);
         return ResponseEntity.created(uri).body(dto);
     }

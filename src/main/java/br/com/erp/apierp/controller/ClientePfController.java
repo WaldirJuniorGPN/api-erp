@@ -25,7 +25,7 @@ public class ClientePfController {
         return this.service.buscarTodos(paginacao);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{idAtendente}")
     public ResponseEntity<ResponseClientePfDTO> buscarPorId(@PathVariable Long id) {
         return this.service.buscarPorId(id);
     }
@@ -36,13 +36,13 @@ public class ClientePfController {
         return this.service.cadastrar(dados, uriComponentsBuilder);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{idAtendente}")
     @Transactional
     public ResponseEntity<ResponseClientePfDTO> atualizar(@PathVariable Long id, RequestClientePfDTO dados) {
         return this.service.atualizar(dados, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idAtendente}")
     @Transactional
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         return this.service.deletar(id);
