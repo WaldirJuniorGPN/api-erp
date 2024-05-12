@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Arquivos de Dados ###
-data/mysql.sock
+data/

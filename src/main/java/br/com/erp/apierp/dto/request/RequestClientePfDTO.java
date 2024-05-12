@@ -18,7 +18,7 @@ public record RequestClientePfDTO(
         @Pattern(regexp = "\\d{2}\\s\\d{5}-\\d{4}")
         String telefone,
         @Valid
-        Endereco endereco
+        RequestEnderecoDto endereco
 ) {
 }
 
