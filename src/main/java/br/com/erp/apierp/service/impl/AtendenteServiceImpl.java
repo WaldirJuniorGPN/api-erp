@@ -1,15 +1,16 @@
 package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
+import br.com.erp.apierp.dto.request.RequestEnderecoDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.model.Atendente;
+import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.service.AtendenteService;
-import br.com.erp.apierp.service.EnderecoService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,8 @@ public class AtendenteServiceImpl implements AtendenteService {
     private ModelMapper modelMapper;
     @Autowired
     private EnderecoService enderecoService;
+    @Autowired
+    private ConverteDadosImpl converteDados;
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
@@ -53,14 +56,17 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     @Override
-    public ResponseEntity<ResponseAtendenteDto> cadastrar(RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
-        var atendente = this.modelMapper.map(dados, Atendente.class);
-        var endereco = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
+    public ResponseEntity<ResponseAtendenteDto> cadastrar(@Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
+//        var atendente = this.modelMapper.map(dados, Atendente.class);
+
+        var atendente = new Atendente(dados);
+        var json = this.enderecoService.buscaEndereco(dados.endereco().cep());
+        var endereco = new Endereco(this.converteDados.obterDados(json, RequestEnderecoDto.class));
         atendente.setEndereco(endereco);
         this.atribuirVendas(atendente);
         this.repository.save(atendente);
         var uri = uriComponentsBuilder.path("/atendentes/{idAtendente}").buildAndExpand(atendente.getId()).toUri();
-        return ResponseEntity.created(uri).body(this.modelMapper.map(atendente, ResponseAtendenteDto.class));
+        return ResponseEntity.created(uri).body(new ResponseAtendenteDto(atendente));
     }
 
     @Override

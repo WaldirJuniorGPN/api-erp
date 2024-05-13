@@ -5,7 +5,6 @@ import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
 import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
-import br.com.erp.apierp.service.EnderecoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,12 +41,12 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Override
     public ResponseEntity<ResponseClientePfDTO> cadastrar(RequestClientePfDTO dados, UriComponentsBuilder uriComponentsBuilder) {
         var cliente = this.modelMapper.map(dados, ClientePF.class);
-        var endereco = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
-        cliente.setEndereco(endereco);
+//        var endereco = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
+//        cliente.setEndereco(endereco);
         this.repository.save(cliente);
         var uri = uriComponentsBuilder.path("/clientepf/{idAtendente}").buildAndExpand(cliente.getId()).toUri();
-        var dto = this.modelMapper.map(cliente, ResponseClientePfDTO.class);
-        return ResponseEntity.created(uri).body(dto);
+//        var dto = this.modelMapper.map(cliente, ResponseClientePfDTO.class);
+        return ResponseEntity.created(uri).body(new ResponseClientePfDTO(cliente));
     }
 
     @Override

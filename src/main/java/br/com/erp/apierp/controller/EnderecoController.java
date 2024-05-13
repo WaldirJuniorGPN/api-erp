@@ -1,7 +1,7 @@
 package br.com.erp.apierp.controller;
 
 import br.com.erp.apierp.dto.response.ResponseEnderecoDto;
-import br.com.erp.apierp.service.EnderecoService;
+import br.com.erp.apierp.service.impl.EnderecoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.modelmapper.ModelMapper;

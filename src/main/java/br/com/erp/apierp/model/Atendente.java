@@ -1,5 +1,6 @@
 package br.com.erp.apierp.model;
 
+import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,4 +24,11 @@ public class Atendente extends Pessoa {
     private BigDecimal vendasTotal = BigDecimal.ZERO;
     private BigDecimal gratificacao = BigDecimal.ZERO;
     private BigDecimal bonus = BigDecimal.ZERO;
+
+    public Atendente(RequestAtendenteDto dados) {
+        super.setNome(dados.nome());
+        super.setCpf(dados.cpf());
+        super.setEmail(dados.email());
+        super.setTelefone(dados.telefone());
+    }
 }

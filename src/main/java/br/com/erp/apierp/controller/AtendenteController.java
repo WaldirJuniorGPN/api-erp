@@ -3,8 +3,9 @@ package br.com.erp.apierp.controller;
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
-import br.com.erp.apierp.service.AtendenteService;
+import br.com.erp.apierp.model.Atendente;
 import br.com.erp.apierp.service.impl.AtendenteServiceImpl;
+import br.com.erp.apierp.service.impl.ConverteDadosImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public class AtendenteController {
 
     @Autowired
     private AtendenteServiceImpl service;
+    @Autowired
+    private ConverteDadosImpl converteDados;
 
     @GetMapping
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
@@ -31,17 +34,17 @@ public class AtendenteController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseAtendenteDto> cadastrar(@Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<ResponseAtendenteDto> cadastrar(@RequestBody @Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
         return this.service.cadastrar(dados, uriComponentsBuilder);
     }
 
     @PostMapping("/cadastro-vendas")
-    public ResponseEntity<ResponseAtendenteDto> cadastrarVendasSemanais(@Valid RequestVendasDto vendasDto) {
+    public ResponseEntity<ResponseAtendenteDto> cadastrarVendasSemanais(@RequestBody @Valid RequestVendasDto vendasDto) {
         return this.service.cadastrarVendasSemanais(vendasDto);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseAtendenteDto> atualizar(Long id, @Valid RequestAtendenteDto dados) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseAtendenteDto> atualizar(@PathVariable Long id, @RequestBody @Valid RequestAtendenteDto dados) {
         return this.service.atualizar(id, dados);
     }
 
