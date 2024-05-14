@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Atendente extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter
     private List<BigDecimal> vendasSemanais = new ArrayList<>(6);
     private BigDecimal vendasTotal = BigDecimal.ZERO;
     private BigDecimal gratificacao = BigDecimal.ZERO;

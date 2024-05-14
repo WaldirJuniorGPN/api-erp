@@ -4,6 +4,7 @@ import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestEnderecoDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
+import br.com.erp.apierp.dto.response.ResponseEnderecoDto;
 import br.com.erp.apierp.model.Atendente;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.repository.AtendenteRepository;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -43,15 +46,14 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
-        var page = this.repository.findAll(pageable);
-        var pageDto = page.map(entidade -> this.modelMapper.map(entidade, ResponseAtendenteDto.class));
-        return ResponseEntity.ok(pageDto);
+        var page = this.repository.findAll(pageable).map(ResponseAtendenteDto::new);
+        return ResponseEntity.ok(page);
     }
 
     @Override
     public ResponseEntity<ResponseAtendenteDto> buscarPorId(Long id) {
         var atendente = this.repository.getReferenceById(id);
-        var dto = this.modelMapper.map(atendente, ResponseAtendenteDto.class);
+        var dto = new ResponseAtendenteDto(atendente);
         return ResponseEntity.ok(dto);
     }
 
@@ -74,15 +76,17 @@ public class AtendenteServiceImpl implements AtendenteService {
         var atendente = this.repository.getReferenceById(vendasDto.idAtendente());
         this.atribuirVendas(atendente, vendasDto);
         this.repository.save(atendente);
-        return ResponseEntity.ok(this.modelMapper.map(atendente, ResponseAtendenteDto.class));
+        return ResponseEntity.ok(new ResponseAtendenteDto(atendente));
     }
 
     @Override
     public ResponseEntity<ResponseAtendenteDto> atualizar(Long id, RequestAtendenteDto dados) {
         var atendente = this.repository.getReferenceById(id);
-        this.modelMapper.map(dados, atendente);
+//        this.modelMapper.map(dados, atendente);
+        this.atualizarDados(atendente, dados);
         this.repository.save(atendente);
-        return ResponseEntity.ok(this.modelMapper.map(atendente, ResponseAtendenteDto.class));
+        //return ResponseEntity.ok(this.modelMapper.map(atendente, ResponseAtendenteDto.class));
+        return ResponseEntity.ok(new ResponseAtendenteDto(atendente));
     }
 
     @Override
@@ -92,6 +96,9 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void atribuirVendas(Atendente atendente, RequestVendasDto vendasDto) {
+        if (atendente.getVendasSemanais() == null || atendente.getVendasSemanais().isEmpty()) {
+            atendente.setVendasSemanais(new ArrayList<>(Collections.nCopies(6, BigDecimal.ZERO)));
+        }
         Map<Integer, Supplier<BigDecimal>> vendasMap = new HashMap<>();
         vendasMap.put(PRIMEIRA_SEMANA, vendasDto::vendasPrimeiraSemana);
         vendasMap.put(SEGUNDA_SEMANA, vendasDto::vendasSegundaSemana);
@@ -104,7 +111,7 @@ public class AtendenteServiceImpl implements AtendenteService {
             var vendas = spplier.get();
             if (vendas != null) {
                 atendente.getVendasSemanais().set(semana, spplier.get());
-            }else {
+            } else {
                 atendente.getVendasSemanais().set(semana, BigDecimal.ZERO);
             }
         });
@@ -114,5 +121,15 @@ public class AtendenteServiceImpl implements AtendenteService {
         for (int i = 0; i < atendente.getVendasSemanais().size(); i++) {
             atendente.getVendasSemanais().set(i, BigDecimal.ZERO);
         }
+    }
+
+    private void atualizarDados(Atendente atendente, RequestAtendenteDto dto) {
+        atendente.setNome(dto.nome());
+        var json = this.enderecoService.buscaEndereco(dto.endereco().cep());
+        var endereco = new Endereco(this.converteDados.obterDados(json, RequestEnderecoDto.class));
+        atendente.setEndereco(endereco);
+        atendente.setCpf(dto.cpf());
+        atendente.setEmail(dto.email());
+        atendente.setTelefone(dto.telefone());
     }
 }
