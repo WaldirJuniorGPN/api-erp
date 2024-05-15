@@ -37,5 +37,7 @@ public class VendasSemanais {
         this.quartaSemana = vendasDto.vendasQuartaSemana();
         this.quintaSemana = vendasDto.vendasQuintaSemana();
         this.sextaSemana = vendasDto.vendasSextaSemana();
+
+        this.atendente.setVendasTotal(this.primeiraSemana, this.segundaSemana, this.terceiraSemana, this.quartaSemana, this.quintaSemana, this.sextaSemana);
     }
 }

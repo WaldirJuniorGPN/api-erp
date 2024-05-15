@@ -4,7 +4,6 @@ import br.com.erp.apierp.model.Atendente;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ResponseAtendenteDto(Long id, String nome, String cpf, String email, String telefone,

@@ -6,12 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "atendentes")
@@ -36,5 +32,11 @@ public class Atendente extends Pessoa {
         super.setCpf(dados.cpf());
         super.setEmail(dados.email());
         super.setTelefone(dados.telefone());
+    }
+
+    public void setVendasTotal(BigDecimal... vendas) {
+        for (BigDecimal venda : vendas) {
+            this.vendasTotal = this.vendasTotal.add(venda);
+        }
     }
 }

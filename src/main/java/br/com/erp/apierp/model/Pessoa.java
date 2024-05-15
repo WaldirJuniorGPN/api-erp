@@ -15,4 +15,5 @@ public abstract class Pessoa extends EntityModel {
     private String telefone;
     @Embedded
     private Endereco endereco;
+    private boolean ativo = true;
 }
