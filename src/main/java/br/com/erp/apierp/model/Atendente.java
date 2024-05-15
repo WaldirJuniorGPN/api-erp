@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +24,9 @@ public class Atendente extends Pessoa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
-    private List<BigDecimal> vendasSemanais = new ArrayList<>(6);
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendas_semanais_id")
+    private VendasSemanais vendasSemanais = new VendasSemanais();
     private BigDecimal vendasTotal = BigDecimal.ZERO;
     private BigDecimal gratificacao = BigDecimal.ZERO;
     private BigDecimal bonus = BigDecimal.ZERO;
