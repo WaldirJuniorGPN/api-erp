@@ -26,7 +26,7 @@ public class Atendente extends Pessoa {
     private BigDecimal vendasTotal = BigDecimal.ZERO;
     private BigDecimal gratificacao = BigDecimal.ZERO;
     private BigDecimal bonus = BigDecimal.ZERO;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loja_id")
     private Loja loja;
 

@@ -4,7 +4,6 @@ import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.service.impl.AtendenteServiceImpl;
-import br.com.erp.apierp.service.impl.ConverteDadosImpl;
 import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ public class AtendenteController {
 
     @Autowired
     private AtendenteServiceImpl service;
-    @Autowired
-    private ConverteDadosImpl converteDados;
 
     @GetMapping
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {

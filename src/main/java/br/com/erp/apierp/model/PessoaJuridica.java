@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class PessoaJuridica extends EntityModel{
+    private String cnpj;
     private String razaoSocial;
     private String nomeFantasia;
     private String inscricaoEstadual;
