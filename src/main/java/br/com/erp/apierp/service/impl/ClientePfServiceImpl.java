@@ -7,7 +7,6 @@ import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

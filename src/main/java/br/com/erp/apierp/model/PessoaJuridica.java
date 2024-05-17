@@ -15,4 +15,5 @@ public abstract class PessoaJuridica extends EntityModel{
     private String telefone;
     private String email;
     private Endereco endereco;
+    private boolean ativo = true;
 }
