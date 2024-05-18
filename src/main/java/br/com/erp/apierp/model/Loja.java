@@ -1,6 +1,7 @@
 package br.com.erp.apierp.model;
 
 import br.com.erp.apierp.dto.request.ConverteLojaDto;
+import br.com.erp.apierp.dto.request.RequestLoja;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,6 +27,15 @@ public class Loja extends PessoaJuridica {
 
     public Loja(ConverteLojaDto dados, String cnpj) {
         super.setCnpj(cnpj);
+        super.setRazaoSocial(dados.razaoSocial());
+        super.setNomeFantasia(dados.nomeFantasia());
+        super.setInscricaoEstadual(dados.inscricaoEstadual());
+        super.setTelefone(dados.telefone());
+        super.setEmail(dados.email());
+    }
+
+    public Loja(RequestLoja dados) {
+        super.setCnpj(dados.cnpj());
         super.setRazaoSocial(dados.razaoSocial());
         super.setNomeFantasia(dados.nomeFantasia());
         super.setInscricaoEstadual(dados.inscricaoEstadual());

@@ -7,6 +7,8 @@ import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
+import br.com.erp.apierp.service.EnderecoService;
+import br.com.erp.apierp.service.IConverteDados;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,7 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Autowired
     private EnderecoService enderecoService;
     @Autowired
-    private ConverteDadosImpl converteDados;
+    private IConverteDados converteDados;
 
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {

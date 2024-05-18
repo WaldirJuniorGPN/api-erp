@@ -1,5 +1,6 @@
 package br.com.erp.apierp.service.impl;
 
+import br.com.erp.apierp.service.CNPJService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -11,11 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class CNPJService {
+public class CNPJServiceImpl implements CNPJService {
 
-    private static final Logger LOGGER = Logger.getLogger(CNPJService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CNPJServiceImpl.class.getName());
     private final String URL = "https://publica.cnpj.ws/cnpj/";
 
+    @Override
     public String obterDadosCnpj(String cnpj) {
         HttpClient client = HttpClient.newHttpClient();
         try {

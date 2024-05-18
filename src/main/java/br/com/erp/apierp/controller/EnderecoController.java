@@ -1,7 +1,7 @@
 package br.com.erp.apierp.controller;
 
 import br.com.erp.apierp.dto.response.ResponseEnderecoDto;
-import br.com.erp.apierp.service.impl.EnderecoService;
+import br.com.erp.apierp.service.impl.EnderecoServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.modelmapper.ModelMapper;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnderecoController {
 
     @Autowired
-    private EnderecoService service;
+    private EnderecoServiceImpl service;
     @Autowired
     private ModelMapper modelMapper;
 

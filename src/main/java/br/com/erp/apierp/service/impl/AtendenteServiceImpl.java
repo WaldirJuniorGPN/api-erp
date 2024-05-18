@@ -10,6 +10,7 @@ import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.repository.VendasSemanaisRepository;
 import br.com.erp.apierp.service.AtendenteService;
+import br.com.erp.apierp.service.EnderecoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
