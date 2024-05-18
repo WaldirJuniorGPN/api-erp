@@ -7,8 +7,7 @@ import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
-import br.com.erp.apierp.service.EnderecoService;
-import br.com.erp.apierp.service.IConverteDados;
+import br.com.erp.apierp.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +22,7 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Autowired
     private ClientePfRepository repository;
     @Autowired
-    private EnderecoService enderecoService;
-    @Autowired
-    private IConverteDados converteDados;
+    private DataService dataService;
 
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {
@@ -42,8 +39,8 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Override
     public ResponseEntity<ResponseClientePfDTO> cadastrar(RequestClientePfDTO dados, UriComponentsBuilder uriComponentsBuilder) {
         var cliente = new ClientePF(dados);
-        var endereco = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
-        var enderecoDto = this.converteDados.obterDados(endereco, RequestEnderecoDto.class);
+        var endereco = this.dataService.buscaEnderecoApi(dados.pessoaDto().endereco().cep());
+        var enderecoDto = this.dataService.obterDados(endereco, RequestEnderecoDto.class);
         var uri = uriComponentsBuilder.path("/clientepf/{idAtendente}").buildAndExpand(cliente.getId()).toUri();
         cliente.setEndereco(new Endereco(enderecoDto));
         this.repository.save(cliente);
@@ -71,8 +68,8 @@ public class ClientePfServiceImpl implements ClientePfService {
         cliente.setCpf(dados.pessoaDto().cpf());
         cliente.setEmail(dados.pessoaDto().email());
         cliente.setTelefone(dados.pessoaDto().telefone());
-        var json = this.enderecoService.buscaEndereco(dados.pessoaDto().endereco().cep());
-        var enderecoDto = this.converteDados.obterDados(json, RequestEnderecoDto.class);
+        var json = this.dataService.buscaEnderecoApi(dados.pessoaDto().endereco().cep());
+        var enderecoDto = this.dataService.obterDados(json, RequestEnderecoDto.class);
         cliente.setEndereco(new Endereco(enderecoDto));
     }
 }

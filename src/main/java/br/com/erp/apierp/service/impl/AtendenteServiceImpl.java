@@ -10,7 +10,7 @@ import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.repository.VendasSemanaisRepository;
 import br.com.erp.apierp.service.AtendenteService;
-import br.com.erp.apierp.service.EnderecoService;
+import br.com.erp.apierp.service.DataService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,9 +27,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Autowired
     private VendasSemanaisRepository vendasSemanaisRepository;
     @Autowired
-    private EnderecoService enderecoService;
-    @Autowired
-    private ConverteDadosImpl converteDados;
+    private DataService dataService;
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
@@ -47,8 +45,8 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public ResponseEntity<ResponseAtendenteDto> cadastrar(@Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
         var atendente = new Atendente(dados);
-        var json = this.enderecoService.buscaEndereco(dados.endereco().cep());
-        var endereco = new Endereco(this.converteDados.obterDados(json, RequestEnderecoDto.class));
+        var json = this.dataService.buscaEnderecoApi((dados.endereco().cep()));
+        var endereco = new Endereco(this.dataService.obterDados(json, RequestEnderecoDto.class));
         atendente.setEndereco(endereco);
         this.atendenteRepository.save(atendente);
         var uri = uriComponentsBuilder.path("/atendentes/{idAtendente}").buildAndExpand(atendente.getId()).toUri();
@@ -83,8 +81,8 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     private void atualizarDados(Atendente atendente, RequestAtendenteDto dto) {
         atendente.setNome(dto.nome());
-        var json = this.enderecoService.buscaEndereco(dto.endereco().cep());
-        var endereco = new Endereco(this.converteDados.obterDados(json, RequestEnderecoDto.class));
+        var json = this.dataService.buscaEnderecoApi(dto.endereco().cep());
+        var endereco = new Endereco(this.dataService.obterDados(json, RequestEnderecoDto.class));
         atendente.setEndereco(endereco);
         atendente.setCpf(dto.cpf());
         atendente.setEmail(dto.email());
