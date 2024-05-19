@@ -1,13 +1,10 @@
 package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestClientePfDTO;
-import br.com.erp.apierp.dto.request.RequestEnderecoDto;
 import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
-import br.com.erp.apierp.model.ClientePF;
-import br.com.erp.apierp.model.Endereco;
+import br.com.erp.apierp.factory.ClientePfFactory;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
-import br.com.erp.apierp.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +19,7 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Autowired
     private ClientePfRepository repository;
     @Autowired
-    private DataService dataService;
+    private ClientePfFactory factory;
 
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {
@@ -38,11 +35,8 @@ public class ClientePfServiceImpl implements ClientePfService {
 
     @Override
     public ResponseEntity<ResponseClientePfDTO> cadastrar(RequestClientePfDTO dados, UriComponentsBuilder uriComponentsBuilder) {
-        var cliente = new ClientePF(dados);
-        var endereco = this.dataService.buscaEnderecoApi(dados.pessoaDto().endereco().cep());
-        var enderecoDto = this.dataService.obterDados(endereco, RequestEnderecoDto.class);
+        var cliente = this.factory.criaCliente(dados);
         var uri = uriComponentsBuilder.path("/clientepf/{idAtendente}").buildAndExpand(cliente.getId()).toUri();
-        cliente.setEndereco(new Endereco(enderecoDto));
         this.repository.save(cliente);
         return ResponseEntity.created(uri).body(new ResponseClientePfDTO(cliente));
     }
@@ -50,7 +44,7 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Override
     public ResponseEntity<ResponseClientePfDTO> atualizar(RequestClientePfDTO dados, Long id) {
         var cliente = this.repository.findByIdAndAtivoTrue(id);
-        this.atualizarDados(cliente, dados);
+        this.factory.atualizaCliente(cliente, dados);
         this.repository.save(cliente);
         return ResponseEntity.ok(new ResponseClientePfDTO(cliente));
     }
@@ -61,15 +55,5 @@ public class ClientePfServiceImpl implements ClientePfService {
         cliente.setAtivo(false);
         this.repository.save(cliente);
         return ResponseEntity.noContent().build();
-    }
-
-    private void atualizarDados(ClientePF cliente, RequestClientePfDTO dados) {
-        cliente.setNome(dados.pessoaDto().nome());
-        cliente.setCpf(dados.pessoaDto().cpf());
-        cliente.setEmail(dados.pessoaDto().email());
-        cliente.setTelefone(dados.pessoaDto().telefone());
-        var json = this.dataService.buscaEnderecoApi(dados.pessoaDto().endereco().cep());
-        var enderecoDto = this.dataService.obterDados(json, RequestEnderecoDto.class);
-        cliente.setEndereco(new Endereco(enderecoDto));
     }
 }

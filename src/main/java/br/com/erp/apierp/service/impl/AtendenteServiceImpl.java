@@ -1,16 +1,13 @@
 package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
-import br.com.erp.apierp.dto.request.RequestEnderecoDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
-import br.com.erp.apierp.model.Atendente;
-import br.com.erp.apierp.model.Endereco;
+import br.com.erp.apierp.factory.AtendenteFactory;
 import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.repository.VendasSemanaisRepository;
 import br.com.erp.apierp.service.AtendenteService;
-import br.com.erp.apierp.service.DataService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +24,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Autowired
     private VendasSemanaisRepository vendasSemanaisRepository;
     @Autowired
-    private DataService dataService;
+    private AtendenteFactory factory;
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
@@ -44,10 +41,7 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     @Override
     public ResponseEntity<ResponseAtendenteDto> cadastrar(@Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
-        var atendente = new Atendente(dados);
-        var json = this.dataService.buscaEnderecoApi((dados.endereco().cep()));
-        var endereco = new Endereco(this.dataService.obterDados(json, RequestEnderecoDto.class));
-        atendente.setEndereco(endereco);
+        var atendente = this.factory.criaAtendente(dados);
         this.atendenteRepository.save(atendente);
         var uri = uriComponentsBuilder.path("/atendentes/{idAtendente}").buildAndExpand(atendente.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseAtendenteDto(atendente));
@@ -66,7 +60,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public ResponseEntity<ResponseAtendenteDto> atualizar(Long id, RequestAtendenteDto dados) {
         var atendente = this.atendenteRepository.findByIdAndAtivoTrue(id);
-        this.atualizarDados(atendente, dados);
+        this.factory.atualizaAtendente(atendente, dados);
         this.atendenteRepository.save(atendente);
         return ResponseEntity.ok(new ResponseAtendenteDto(atendente));
     }
@@ -77,15 +71,5 @@ public class AtendenteServiceImpl implements AtendenteService {
         atendente.setAtivo(false);
         this.atendenteRepository.save(atendente);
         return ResponseEntity.noContent().build();
-    }
-
-    private void atualizarDados(Atendente atendente, RequestAtendenteDto dto) {
-        atendente.setNome(dto.nome());
-        var json = this.dataService.buscaEnderecoApi(dto.endereco().cep());
-        var endereco = new Endereco(this.dataService.obterDados(json, RequestEnderecoDto.class));
-        atendente.setEndereco(endereco);
-        atendente.setCpf(dto.cpf());
-        atendente.setEmail(dto.email());
-        atendente.setTelefone(dto.telefone());
     }
 }
