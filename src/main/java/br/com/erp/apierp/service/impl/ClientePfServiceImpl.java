@@ -16,10 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ClientePfServiceImpl implements ClientePfService {
 
 
+    private final ClientePfRepository repository;
+    private final ClientePfFactory factory;
+
     @Autowired
-    private ClientePfRepository repository;
-    @Autowired
-    private ClientePfFactory factory;
+    public ClientePfServiceImpl(ClientePfRepository repository, ClientePfFactory factory) {
+        this.repository = repository;
+        this.factory = factory;
+    }
 
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {

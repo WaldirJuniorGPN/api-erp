@@ -11,8 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClientePfFactory {
 
+    private final DataService service;
+
     @Autowired
-    private DataService service;
+    public ClientePfFactory(DataService service) {
+        this.service = service;
+    }
 
     public ClientePF criaCliente(RequestClientePfDTO dados) {
         var cliente = new ClientePF(dados);

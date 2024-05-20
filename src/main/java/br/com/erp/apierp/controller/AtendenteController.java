@@ -3,7 +3,7 @@ package br.com.erp.apierp.controller;
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
-import br.com.erp.apierp.service.impl.AtendenteServiceImpl;
+import br.com.erp.apierp.service.AtendenteService;
 import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/atendente")
 public class AtendenteController {
 
+    private final AtendenteService service;
+
     @Autowired
-    private AtendenteServiceImpl service;
+    public AtendenteController(AtendenteService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {

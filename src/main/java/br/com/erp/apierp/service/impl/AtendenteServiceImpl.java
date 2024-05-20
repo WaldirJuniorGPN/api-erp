@@ -19,12 +19,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class AtendenteServiceImpl implements AtendenteService {
 
+    private final AtendenteRepository atendenteRepository;
+    private final VendasSemanaisRepository vendasSemanaisRepository;
+    private final AtendenteFactory factory;
+
     @Autowired
-    private AtendenteRepository atendenteRepository;
-    @Autowired
-    private VendasSemanaisRepository vendasSemanaisRepository;
-    @Autowired
-    private AtendenteFactory factory;
+    public AtendenteServiceImpl(AtendenteRepository atendenteRepository, VendasSemanaisRepository vendasSemanaisRepository, AtendenteFactory factory) {
+        this.atendenteRepository = atendenteRepository;
+        this.vendasSemanaisRepository = vendasSemanaisRepository;
+        this.factory = factory;
+    }
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {

@@ -8,14 +8,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataServiceImpl implements DataService {
 
+    private final IConverteDados converteDados;
+    private final EnderecoService enderecoService;
+    private final ConverteJsonService converteJsonService;
+    private final CNPJService cnpjService;
+
     @Autowired
-    private IConverteDados converteDados;
-    @Autowired
-    private EnderecoService enderecoService;
-    @Autowired
-    private ConverteJsonService converteJsonService;
-    @Autowired
-    private CNPJService cnpjService;
+    public DataServiceImpl(IConverteDados converteDados, EnderecoService enderecoService, ConverteJsonService converteJsonService, CNPJService cnpjService) {
+        this.converteDados = converteDados;
+        this.enderecoService = enderecoService;
+        this.converteJsonService = converteJsonService;
+        this.cnpjService = cnpjService;
+    }
 
     @Override
     public <T> T obterDados(String json, Class<T> classe) {

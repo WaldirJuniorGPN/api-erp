@@ -12,8 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LojaFactory {
 
+    private final DataService service;
+
     @Autowired
-    private DataService service;
+    public LojaFactory(DataService service) {
+        this.service = service;
+    }
 
     public Loja criaLojaApiCnpj(RequestLojaAutomatizado dados) {
         var json = this.service.obterDadosCnpj(dados.cnpj());

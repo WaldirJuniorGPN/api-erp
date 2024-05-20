@@ -38,6 +38,7 @@ public class Atendente extends Pessoa {
     }
 
     public void setVendasTotal(BigDecimal... vendas) {
+        this.vendasTotal = BigDecimal.ZERO;
         for (BigDecimal venda : vendas) {
             this.vendasTotal = this.vendasTotal.add(venda);
         }

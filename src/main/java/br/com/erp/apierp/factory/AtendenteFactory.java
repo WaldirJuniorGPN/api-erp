@@ -11,10 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtendenteFactory {
 
-    @Autowired
-    private DataService service;
+    private final DataService service;
 
-    public Atendente criaAtendente(RequestAtendenteDto dados){
+    @Autowired
+    public AtendenteFactory(DataService service) {
+        this.service = service;
+    }
+
+    public Atendente criaAtendente(RequestAtendenteDto dados) {
         var jsonEndereco = this.service.buscaEnderecoApi(dados.endereco().cep());
         var endereco = new Endereco(this.service.obterDados(jsonEndereco, RequestEnderecoDto.class));
         var atendente = new Atendente(dados);
@@ -22,7 +26,7 @@ public class AtendenteFactory {
         return atendente;
     }
 
-    public void atualizaAtendente(Atendente atendente, RequestAtendenteDto dto){
+    public void atualizaAtendente(Atendente atendente, RequestAtendenteDto dto) {
         atendente.setNome(dto.nome());
         var json = this.service.buscaEnderecoApi(dto.endereco().cep());
         var endereco = new Endereco(this.service.obterDados(json, RequestEnderecoDto.class));

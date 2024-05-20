@@ -3,6 +3,7 @@ package br.com.erp.apierp.controller;
 import br.com.erp.apierp.dto.request.RequestLoja;
 import br.com.erp.apierp.dto.request.RequestLojaAutomatizado;
 import br.com.erp.apierp.dto.response.ResponseLoja;
+import br.com.erp.apierp.dto.response.ResponseLojaBuscaSimples;
 import br.com.erp.apierp.service.LojaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,12 +18,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/loja")
 public class LojaController {
 
+    private final LojaService service;
+
     @Autowired
-    private LojaService service;
+    public LojaController(LojaService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<Page<ResponseLoja>> listarTodos(Pageable pageable) {
         return this.service.listarTodos(pageable);
+    }
+
+    @GetMapping("/busca-simples")
+    public ResponseEntity<Page<ResponseLojaBuscaSimples>> listarTodosBuscaSimples(Pageable pageable){
+        return this.service.listarTodosBuscaSimples(pageable);
     }
 
     @GetMapping("/{id}")
