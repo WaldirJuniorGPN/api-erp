@@ -2,7 +2,7 @@ package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestClientePfDTO;
 import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
-import br.com.erp.apierp.factory.ClientePfFactory;
+import br.com.erp.apierp.factory.impl.ClientePfFactoryImpl;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ public class ClientePfServiceImpl implements ClientePfService {
 
 
     private final ClientePfRepository repository;
-    private final ClientePfFactory factory;
+    private final ClientePfFactoryImpl factory;
 
     @Autowired
-    public ClientePfServiceImpl(ClientePfRepository repository, ClientePfFactory factory) {
+    public ClientePfServiceImpl(ClientePfRepository repository, ClientePfFactoryImpl factory) {
         this.repository = repository;
         this.factory = factory;
     }

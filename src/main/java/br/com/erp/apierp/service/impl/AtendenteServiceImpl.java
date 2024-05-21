@@ -3,7 +3,7 @@ package br.com.erp.apierp.service.impl;
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
-import br.com.erp.apierp.factory.AtendenteFactory;
+import br.com.erp.apierp.factory.impl.AtendenteFactoryImpl;
 import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.repository.VendasSemanaisRepository;
@@ -21,10 +21,10 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     private final AtendenteRepository atendenteRepository;
     private final VendasSemanaisRepository vendasSemanaisRepository;
-    private final AtendenteFactory factory;
+    private final AtendenteFactoryImpl factory;
 
     @Autowired
-    public AtendenteServiceImpl(AtendenteRepository atendenteRepository, VendasSemanaisRepository vendasSemanaisRepository, AtendenteFactory factory) {
+    public AtendenteServiceImpl(AtendenteRepository atendenteRepository, VendasSemanaisRepository vendasSemanaisRepository, AtendenteFactoryImpl factory) {
         this.atendenteRepository = atendenteRepository;
         this.vendasSemanaisRepository = vendasSemanaisRepository;
         this.factory = factory;
@@ -32,13 +32,13 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
-        var page = this.atendenteRepository.findAllByAtivoTrue(pageable).map(ResponseAtendenteDto::new);
+        var page = this.atendenteRepository.findAllByAtivoTrue(pageable).orElseThrow().map(ResponseAtendenteDto::new);
         return ResponseEntity.ok(page);
     }
 
     @Override
     public ResponseEntity<ResponseAtendenteDto> buscarPorId(Long id) {
-        var atendente = this.atendenteRepository.findByIdAndAtivoTrue(id);
+        var atendente = this.atendenteRepository.findByIdAndAtivoTrue(id).orElseThrow();
         var dto = new ResponseAtendenteDto(atendente);
         return ResponseEntity.ok(dto);
     }
