@@ -7,7 +7,7 @@ import br.com.erp.apierp.dto.response.ResponseLojaBuscaSimples;
 import br.com.erp.apierp.service.LojaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/loja")
+@RequiredArgsConstructor
 public class LojaController {
 
     private final LojaService service;
-
-    @Autowired
-    public LojaController(LojaService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<Page<ResponseLoja>> listarTodos(Pageable pageable) {

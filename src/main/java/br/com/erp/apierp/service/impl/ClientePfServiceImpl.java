@@ -2,9 +2,11 @@ package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestClientePfDTO;
 import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
+import br.com.erp.apierp.exception.ControllerNotFoundException;
 import br.com.erp.apierp.factory.impl.ClientePfFactoryImpl;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,27 +15,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@RequiredArgsConstructor
 public class ClientePfServiceImpl implements ClientePfService {
 
 
     private final ClientePfRepository repository;
     private final ClientePfFactoryImpl factory;
 
-    @Autowired
-    public ClientePfServiceImpl(ClientePfRepository repository, ClientePfFactoryImpl factory) {
-        this.repository = repository;
-        this.factory = factory;
-    }
-
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {
-        var page = this.repository.findAllByAtivoTrue(pageable).map(ResponseClientePfDTO::new);
+        var page = this.repository.findAllByAtivoTrue(pageable).orElseThrow(this::throwClienteNotFoundExeption).map(ResponseClientePfDTO::new);
         return ResponseEntity.ok(page);
     }
 
     @Override
     public ResponseEntity<ResponseClientePfDTO> buscarPorId(Long id) {
-        var clientePf = this.repository.findByIdAndAtivoTrue(id);
+        var clientePf = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwClienteNotFoundExeption);
         return ResponseEntity.ok(new ResponseClientePfDTO(clientePf));
     }
 
@@ -47,7 +44,7 @@ public class ClientePfServiceImpl implements ClientePfService {
 
     @Override
     public ResponseEntity<ResponseClientePfDTO> atualizar(RequestClientePfDTO dados, Long id) {
-        var cliente = this.repository.findByIdAndAtivoTrue(id);
+        var cliente = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwClienteNotFoundExeption);
         this.factory.atualizaCliente(cliente, dados);
         this.repository.save(cliente);
         return ResponseEntity.ok(new ResponseClientePfDTO(cliente));
@@ -55,9 +52,13 @@ public class ClientePfServiceImpl implements ClientePfService {
 
     @Override
     public ResponseEntity<Void> deletar(Long id) {
-        var cliente = this.repository.getReferenceById(id);
+        var cliente = this.repository.findById(id).orElseThrow(this::throwClienteNotFoundExeption);
         cliente.setAtivo(false);
         this.repository.save(cliente);
         return ResponseEntity.noContent().build();
+    }
+
+    private ControllerNotFoundException throwClienteNotFoundExeption() {
+        return new ControllerNotFoundException("Cliente não encontrado");
     }
 }

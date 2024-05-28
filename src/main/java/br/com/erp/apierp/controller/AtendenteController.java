@@ -6,7 +6,7 @@ import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.service.AtendenteService;
 import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +15,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/atendente")
+@RequiredArgsConstructor
 public class AtendenteController {
 
     private final AtendenteService service;
-
-    @Autowired
-    public AtendenteController(AtendenteService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {

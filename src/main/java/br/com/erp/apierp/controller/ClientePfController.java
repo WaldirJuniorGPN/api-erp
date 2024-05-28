@@ -4,7 +4,7 @@ import br.com.erp.apierp.dto.request.RequestClientePfDTO;
 import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
 import br.com.erp.apierp.service.ClientePfService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +13,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/clientepf")
+@RequiredArgsConstructor
 public class ClientePfController {
 
     private final ClientePfService service;
-
-    @Autowired
-    public ClientePfController(ClientePfService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable paginacao) {

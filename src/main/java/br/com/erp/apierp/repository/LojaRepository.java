@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface LojaRepository extends JpaRepository<Loja, Long> {
 
-    Page<Loja> findAllByAtivoTrue(Pageable pageable);
+    Optional<Page<Loja>> findAllByAtivoTrue(Pageable pageable);
 
-    Loja findByIdAndAtivoTrue(Long id);
+    Optional<Loja> findByIdAndAtivoTrue(Long id);
 }

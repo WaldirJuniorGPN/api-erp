@@ -2,11 +2,10 @@ package br.com.erp.apierp.controller;
 
 import br.com.erp.apierp.dto.response.ResponseEnderecoDto;
 import br.com.erp.apierp.service.EnderecoService;
-import br.com.erp.apierp.service.impl.EnderecoServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,16 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/endereco")
+@RequiredArgsConstructor
 public class EnderecoController {
 
     private final EnderecoService service;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public EnderecoController(EnderecoService service, ModelMapper modelMapper) {
-        this.service = service;
-        this.modelMapper = modelMapper;
-    }
 
     @GetMapping("/{cep}")
     public ResponseEntity<ResponseEnderecoDto> buscarEndereco(@PathVariable @Valid @Pattern(regexp = "\\d{8}") String cep) {

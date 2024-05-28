@@ -4,10 +4,11 @@ import br.com.erp.apierp.dto.request.RequestLoja;
 import br.com.erp.apierp.dto.request.RequestLojaAutomatizado;
 import br.com.erp.apierp.dto.response.ResponseLoja;
 import br.com.erp.apierp.dto.response.ResponseLojaBuscaSimples;
+import br.com.erp.apierp.exception.ControllerNotFoundException;
 import br.com.erp.apierp.factory.impl.LojaFactoryImpl;
 import br.com.erp.apierp.repository.LojaRepository;
 import br.com.erp.apierp.service.LojaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,32 +16,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@RequiredArgsConstructor
 public class LojaServiceImpl implements LojaService {
 
     private final LojaRepository repository;
     private final LojaFactoryImpl factory;
 
-    @Autowired
-    public LojaServiceImpl(LojaRepository repository, LojaFactoryImpl factory) {
-        this.repository = repository;
-        this.factory = factory;
-    }
-
     @Override
     public ResponseEntity<Page<ResponseLoja>> listarTodos(Pageable pageable) {
-        var page = this.repository.findAllByAtivoTrue(pageable).map(ResponseLoja::new);
+        var page = this.repository.findAllByAtivoTrue(pageable).orElseThrow(this::throwLojaNotFoundException).map(ResponseLoja::new);
         return ResponseEntity.ok(page);
     }
 
     @Override
     public ResponseEntity<Page<ResponseLojaBuscaSimples>> listarTodosBuscaSimples(Pageable pageable) {
-        var page = this.repository.findAllByAtivoTrue(pageable).map(ResponseLojaBuscaSimples::new);
+        var page = this.repository.findAllByAtivoTrue(pageable).orElseThrow(this::throwLojaNotFoundException).map(ResponseLojaBuscaSimples::new);
         return ResponseEntity.ok(page);
     }
 
     @Override
     public ResponseEntity<ResponseLoja> buscarPorId(Long id) {
-        var loja = this.repository.findByIdAndAtivoTrue(id);
+        var loja = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwLojaNotFoundException);
         return ResponseEntity.ok(new ResponseLoja(loja));
     }
 
@@ -62,7 +58,7 @@ public class LojaServiceImpl implements LojaService {
 
     @Override
     public ResponseEntity<ResponseLoja> atualizar(Long id, RequestLoja dados) {
-        var loja = this.repository.findByIdAndAtivoTrue(id);
+        var loja = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwLojaNotFoundException);
         this.factory.atualizaLoja(loja, dados);
         this.repository.save(loja);
         return ResponseEntity.ok(new ResponseLoja(loja));
@@ -70,9 +66,13 @@ public class LojaServiceImpl implements LojaService {
 
     @Override
     public ResponseEntity<Void> deletar(Long id) {
-        var loja = this.repository.getReferenceById(id);
+        var loja = this.repository.findById(id).orElseThrow(this::throwLojaNotFoundException);
         loja.setAtivo(false);
         this.repository.save(loja);
         return ResponseEntity.noContent().build();
+    }
+
+    private ControllerNotFoundException throwLojaNotFoundException() {
+        return new ControllerNotFoundException("Loja não encontrada");
     }
 }
