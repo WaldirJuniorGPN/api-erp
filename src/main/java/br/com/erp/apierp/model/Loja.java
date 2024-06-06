@@ -24,6 +24,8 @@ public class Loja extends PessoaJuridica {
     @OneToMany(mappedBy = "loja", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Atendente> atendentes = new ArrayList<>();
     private BigDecimal vendaTotal = BigDecimal.ZERO;
+    @OneToOne(mappedBy = "loja", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CalculadoraDeGratificacao calculadora;
 
     public Loja(ConverteLojaDto dados, String cnpj) {
         super.setCnpj(cnpj);

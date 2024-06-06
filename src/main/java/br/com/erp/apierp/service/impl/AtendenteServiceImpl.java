@@ -2,11 +2,13 @@ package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
+import br.com.erp.apierp.dto.request.RequestVinculoLojaDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.exception.ControllerNotFoundException;
 import br.com.erp.apierp.factory.impl.AtendenteFactoryImpl;
 import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
+import br.com.erp.apierp.repository.LojaRepository;
 import br.com.erp.apierp.repository.VendasSemanaisRepository;
 import br.com.erp.apierp.service.AtendenteService;
 import jakarta.validation.Valid;
@@ -23,6 +25,7 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     private final AtendenteRepository atendenteRepository;
     private final VendasSemanaisRepository vendasSemanaisRepository;
+    private final LojaRepository lojaRepository;
     private final AtendenteFactoryImpl factory;
 
     @Override
@@ -70,6 +73,14 @@ public class AtendenteServiceImpl implements AtendenteService {
         atendente.setAtivo(false);
         this.atendenteRepository.save(atendente);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<ResponseAtendenteDto> vincularAtendenteALoja(RequestVinculoLojaDto dto) {
+        var atendente = this.atendenteRepository.findByIdAndAtivoTrue(dto.idAtendnete()).orElseThrow(this::throwAtendenteNotFoundException);
+        var loja = this.lojaRepository.findByIdAndAtivoTrue(dto.idLoja()).orElseThrow(this::throwAtendenteNotFoundException);
+        atendente.setLoja(loja);
+        return null;
     }
 
     private ControllerNotFoundException throwAtendenteNotFoundException() {

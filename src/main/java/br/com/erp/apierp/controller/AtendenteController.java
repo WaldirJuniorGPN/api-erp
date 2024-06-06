@@ -2,6 +2,7 @@ package br.com.erp.apierp.controller;
 
 import br.com.erp.apierp.dto.request.RequestAtendenteDto;
 import br.com.erp.apierp.dto.request.RequestVendasDto;
+import br.com.erp.apierp.dto.request.RequestVinculoLojaDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.service.AtendenteService;
 import jakarta.persistence.Transient;
@@ -40,6 +41,12 @@ public class AtendenteController {
     @Transient
     public ResponseEntity<ResponseAtendenteDto> cadastrarVendasSemanais(@RequestBody @Valid RequestVendasDto vendasDto) {
         return this.service.cadastrarVendasSemanais(vendasDto);
+    }
+
+    @PatchMapping("/vinculo-loja")
+    @Transient
+    public ResponseEntity<ResponseAtendenteDto> vincularAtendenteALoja(@RequestBody @Valid RequestVinculoLojaDto dto){
+        return  this.service.vincularAtendenteALoja(dto);
     }
 
     @PutMapping("/{id}")

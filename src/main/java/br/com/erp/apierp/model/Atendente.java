@@ -19,6 +19,7 @@ public class Atendente extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Setter
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "vendas_semanais_id")
@@ -26,6 +27,7 @@ public class Atendente extends Pessoa {
     private BigDecimal vendasTotal = BigDecimal.ZERO;
     private BigDecimal gratificacao = BigDecimal.ZERO;
     private BigDecimal bonus = BigDecimal.ZERO;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loja_id")
     private Loja loja;
@@ -41,6 +43,13 @@ public class Atendente extends Pessoa {
         this.vendasTotal = BigDecimal.ZERO;
         for (BigDecimal venda : vendas) {
             this.vendasTotal = this.vendasTotal.add(venda);
+        }
+    }
+
+    public void setLoja(Loja loja) {
+        this.loja = loja;
+        if (!this.loja.getAtendentes().contains(this)) {
+            this.loja.getAtendentes().add(this);
         }
     }
 }
