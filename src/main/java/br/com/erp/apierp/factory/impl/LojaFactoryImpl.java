@@ -7,21 +7,19 @@ import br.com.erp.apierp.factory.LojaFactory;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.model.Loja;
 import br.com.erp.apierp.service.DataService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LojaFactoryImpl implements LojaFactory {
+@Qualifier("lojaFactory")
+@RequiredArgsConstructor
+public class LojaFactoryImpl implements LojaFactory<Loja, RequestLoja> {
 
     private final DataService service;
 
-    @Autowired
-    public LojaFactoryImpl(DataService service) {
-        this.service = service;
-    }
-
     @Override
-    public Loja criaLojaApiCnpj(RequestLojaAutomatizado dados) {
+    public Loja criarApiCnpj(RequestLojaAutomatizado dados) {
         var json = this.service.obterDadosCnpj(dados.cnpj());
         var lojaDto = this.service.converteJson(json);
         var jsonEndereco = this.service.buscaEnderecoApi(lojaDto.cep());
@@ -32,7 +30,7 @@ public class LojaFactoryImpl implements LojaFactory {
     }
 
     @Override
-    public Loja criaLoja(RequestLoja dados) {
+    public Loja criar(RequestLoja dados) {
         var loja = new Loja(dados);
         var jsonEndereco = this.service.buscaEnderecoApi(dados.enderecoDto().cep());
         var enderecoDto = this.service.obterDados(jsonEndereco, RequestEnderecoDto.class);
@@ -41,7 +39,7 @@ public class LojaFactoryImpl implements LojaFactory {
     }
 
     @Override
-    public void atualizaLoja(Loja loja, RequestLoja dto) {
+    public void atualizar(Loja loja, RequestLoja dto) {
         loja.setCnpj(dto.cnpj());
         loja.setRazaoSocial(dto.razaoSocial());
         loja.setNomeFantasia(dto.nomeFantasia());

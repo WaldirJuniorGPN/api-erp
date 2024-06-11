@@ -1,16 +1,17 @@
 package br.com.erp.apierp.factory.impl;
 
 import br.com.erp.apierp.dto.request.RequestCalculadoraDto;
-import br.com.erp.apierp.factory.CalculadoraDeGratificacaoFactory;
+import br.com.erp.apierp.factory.EntityFactory;
 import br.com.erp.apierp.model.CalculadoraDeGratificacao;
-import br.com.erp.apierp.model.Loja;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CalculadoraDeGratificacaoFactoryImpl implements CalculadoraDeGratificacaoFactory {
+@Qualifier("calculadoraDeGratificacaoFactory")
+public class CalculadoraDeGratificacaoFactoryImpl implements EntityFactory<CalculadoraDeGratificacao, RequestCalculadoraDto> {
 
     @Override
-    public CalculadoraDeGratificacao cadastraCalculadora(RequestCalculadoraDto dto) {
+    public CalculadoraDeGratificacao criar(RequestCalculadoraDto dto) {
         var calculadora = new CalculadoraDeGratificacao();
         calculadora.setNome(dto.nome());
         calculadora.setPercentualPrimeiroColocado(dto.percentualPrimeiroColocado());
@@ -22,7 +23,7 @@ public class CalculadoraDeGratificacaoFactoryImpl implements CalculadoraDeGratif
     }
 
     @Override
-    public void atualizaCalculadora(CalculadoraDeGratificacao calculadora, RequestCalculadoraDto dto) {
+    public void atualizar(CalculadoraDeGratificacao calculadora, RequestCalculadoraDto dto) {
         if (!calculadora.getNome().equals(dto.nome())) {
             calculadora.setNome(dto.nome());
         }

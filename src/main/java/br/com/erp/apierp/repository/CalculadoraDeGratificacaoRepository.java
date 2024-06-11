@@ -11,5 +11,5 @@ public interface CalculadoraDeGratificacaoRepository extends JpaRepository<Calcu
 
     Optional<Page<CalculadoraDeGratificacao>> findAllByAtivoTrue(Pageable pageable);
 
-    Optional<CalculadoraDeGratificacao> findByAtivoTrue(Long id);
+    Optional<CalculadoraDeGratificacao> findByIdAndAtivoTrue(Long id);
 }

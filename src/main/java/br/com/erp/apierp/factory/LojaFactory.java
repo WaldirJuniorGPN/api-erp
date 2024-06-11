@@ -4,11 +4,7 @@ import br.com.erp.apierp.dto.request.RequestLoja;
 import br.com.erp.apierp.dto.request.RequestLojaAutomatizado;
 import br.com.erp.apierp.model.Loja;
 
-public interface LojaFactory {
+public interface LojaFactory<T, D extends Record> extends EntityFactory<Loja, RequestLoja> {
 
-    Loja criaLojaApiCnpj(RequestLojaAutomatizado dados);
-
-    Loja criaLoja(RequestLoja dados);
-
-    void atualizaLoja(Loja loja, RequestLoja dto);
+    T criarApiCnpj(RequestLojaAutomatizado dto);
 }

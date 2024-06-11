@@ -2,25 +2,23 @@ package br.com.erp.apierp.factory.impl;
 
 import br.com.erp.apierp.dto.request.RequestClientePfDTO;
 import br.com.erp.apierp.dto.request.RequestEnderecoDto;
-import br.com.erp.apierp.factory.ClientePfFactory;
+import br.com.erp.apierp.factory.EntityFactory;
 import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.model.Endereco;
 import br.com.erp.apierp.service.DataService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClientePfFactoryImpl implements ClientePfFactory {
+@Qualifier("clientePfFactory")
+@RequiredArgsConstructor
+public class ClientePfFactoryImpl implements EntityFactory<ClientePF, RequestClientePfDTO> {
 
     private final DataService service;
 
-    @Autowired
-    public ClientePfFactoryImpl(DataService service) {
-        this.service = service;
-    }
-
     @Override
-    public ClientePF criaCliente(RequestClientePfDTO dados) {
+    public ClientePF criar(RequestClientePfDTO dados) {
         var cliente = new ClientePF(dados);
         var jsonEndereco = this.service.buscaEnderecoApi(dados.pessoaDto().endereco().cep());
         var enderecoDto = this.service.obterDados(jsonEndereco, RequestEnderecoDto.class);
@@ -29,7 +27,7 @@ public class ClientePfFactoryImpl implements ClientePfFactory {
     }
 
     @Override
-    public void atualizaCliente(ClientePF cliente, RequestClientePfDTO dto) {
+    public void atualizar(ClientePF cliente, RequestClientePfDTO dto) {
         cliente.setNome(dto.pessoaDto().nome());
         cliente.setCpf(dto.pessoaDto().cpf());
         cliente.setEmail(dto.pessoaDto().email());

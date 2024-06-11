@@ -2,24 +2,17 @@ package br.com.erp.apierp.service.impl;
 
 import br.com.erp.apierp.dto.request.ConverteLojaDto;
 import br.com.erp.apierp.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DataServiceImpl implements DataService {
 
     private final IConverteDados converteDados;
     private final EnderecoService enderecoService;
     private final ConverteJsonService converteJsonService;
     private final CNPJService cnpjService;
-
-    @Autowired
-    public DataServiceImpl(IConverteDados converteDados, EnderecoService enderecoService, ConverteJsonService converteJsonService, CNPJService cnpjService) {
-        this.converteDados = converteDados;
-        this.enderecoService = enderecoService;
-        this.converteJsonService = converteJsonService;
-        this.cnpjService = cnpjService;
-    }
 
     @Override
     public <T> T obterDados(String json, Class<T> classe) {

@@ -5,7 +5,9 @@ import br.com.erp.apierp.dto.request.RequestVendasDto;
 import br.com.erp.apierp.dto.request.RequestVinculoLojaDto;
 import br.com.erp.apierp.dto.response.ResponseAtendenteDto;
 import br.com.erp.apierp.exception.ControllerNotFoundException;
+import br.com.erp.apierp.factory.EntityFactory;
 import br.com.erp.apierp.factory.impl.AtendenteFactoryImpl;
+import br.com.erp.apierp.model.Atendente;
 import br.com.erp.apierp.model.VendasSemanais;
 import br.com.erp.apierp.repository.AtendenteRepository;
 import br.com.erp.apierp.repository.LojaRepository;
@@ -26,7 +28,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     private final AtendenteRepository atendenteRepository;
     private final VendasSemanaisRepository vendasSemanaisRepository;
     private final LojaRepository lojaRepository;
-    private final AtendenteFactoryImpl factory;
+    private final EntityFactory<Atendente, RequestAtendenteDto> factory;
 
     @Override
     public ResponseEntity<Page<ResponseAtendenteDto>> listarTodos(Pageable pageable) {
@@ -43,7 +45,7 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     @Override
     public ResponseEntity<ResponseAtendenteDto> cadastrar(@Valid RequestAtendenteDto dados, UriComponentsBuilder uriComponentsBuilder) {
-        var atendente = this.factory.criaAtendente(dados);
+        var atendente = this.factory.criar(dados);
         this.atendenteRepository.save(atendente);
         var uri = uriComponentsBuilder.path("/atendentes/{idAtendente}").buildAndExpand(atendente.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseAtendenteDto(atendente));
@@ -62,7 +64,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public ResponseEntity<ResponseAtendenteDto> atualizar(Long id, RequestAtendenteDto dados) {
         var atendente = this.atendenteRepository.findByIdAndAtivoTrue(id).orElseThrow(this::throwAtendenteNotFoundException);
-        this.factory.atualizaAtendente(atendente, dados);
+        this.factory.atualizar(atendente, dados);
         this.atendenteRepository.save(atendente);
         return ResponseEntity.ok(new ResponseAtendenteDto(atendente));
     }

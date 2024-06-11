@@ -5,7 +5,8 @@ import br.com.erp.apierp.dto.request.RequestLojaAutomatizado;
 import br.com.erp.apierp.dto.response.ResponseLoja;
 import br.com.erp.apierp.dto.response.ResponseLojaBuscaSimples;
 import br.com.erp.apierp.exception.ControllerNotFoundException;
-import br.com.erp.apierp.factory.impl.LojaFactoryImpl;
+import br.com.erp.apierp.factory.LojaFactory;
+import br.com.erp.apierp.model.Loja;
 import br.com.erp.apierp.repository.LojaRepository;
 import br.com.erp.apierp.service.LojaService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LojaServiceImpl implements LojaService {
 
     private final LojaRepository repository;
-    private final LojaFactoryImpl factory;
+    private final LojaFactory<Loja,RequestLoja> factory;
 
     @Override
     public ResponseEntity<Page<ResponseLoja>> listarTodos(Pageable pageable) {
@@ -42,7 +43,7 @@ public class LojaServiceImpl implements LojaService {
 
     @Override
     public ResponseEntity<ResponseLoja> cadastrar(RequestLojaAutomatizado dados, UriComponentsBuilder uriComponentsBuilder) {
-        var loja = this.factory.criaLojaApiCnpj(dados);
+        var loja = this.factory.criarApiCnpj(dados);
         var uri = uriComponentsBuilder.path("/loja/{id}").buildAndExpand(loja.getId()).toUri();
         this.repository.save(loja);
         return ResponseEntity.created(uri).body(new ResponseLoja(loja));
@@ -50,7 +51,7 @@ public class LojaServiceImpl implements LojaService {
 
     @Override
     public ResponseEntity<ResponseLoja> cadastrar(RequestLoja dados, UriComponentsBuilder uriComponentsBuilder) {
-        var loja = this.factory.criaLoja(dados);
+        var loja = this.factory.criar(dados);
         var uri = uriComponentsBuilder.path("/loja/{id}").buildAndExpand(loja.getId()).toUri();
         this.repository.save(loja);
         return ResponseEntity.created(uri).body(new ResponseLoja(loja));
@@ -59,7 +60,7 @@ public class LojaServiceImpl implements LojaService {
     @Override
     public ResponseEntity<ResponseLoja> atualizar(Long id, RequestLoja dados) {
         var loja = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwLojaNotFoundException);
-        this.factory.atualizaLoja(loja, dados);
+        this.factory.atualizar(loja, dados);
         this.repository.save(loja);
         return ResponseEntity.ok(new ResponseLoja(loja));
     }

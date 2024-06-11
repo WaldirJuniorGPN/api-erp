@@ -3,11 +3,11 @@ package br.com.erp.apierp.service.impl;
 import br.com.erp.apierp.dto.request.RequestClientePfDTO;
 import br.com.erp.apierp.dto.response.ResponseClientePfDTO;
 import br.com.erp.apierp.exception.ControllerNotFoundException;
-import br.com.erp.apierp.factory.impl.ClientePfFactoryImpl;
+import br.com.erp.apierp.factory.EntityFactory;
+import br.com.erp.apierp.model.ClientePF;
 import br.com.erp.apierp.repository.ClientePfRepository;
 import br.com.erp.apierp.service.ClientePfService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class ClientePfServiceImpl implements ClientePfService {
 
 
     private final ClientePfRepository repository;
-    private final ClientePfFactoryImpl factory;
+    private final EntityFactory<ClientePF, RequestClientePfDTO> factory;
 
     @Override
     public ResponseEntity<Page<ResponseClientePfDTO>> buscarTodos(Pageable pageable) {
@@ -36,7 +36,7 @@ public class ClientePfServiceImpl implements ClientePfService {
 
     @Override
     public ResponseEntity<ResponseClientePfDTO> cadastrar(RequestClientePfDTO dados, UriComponentsBuilder uriComponentsBuilder) {
-        var cliente = this.factory.criaCliente(dados);
+        var cliente = this.factory.criar(dados);
         var uri = uriComponentsBuilder.path("/clientepf/{idAtendente}").buildAndExpand(cliente.getId()).toUri();
         this.repository.save(cliente);
         return ResponseEntity.created(uri).body(new ResponseClientePfDTO(cliente));
@@ -45,7 +45,7 @@ public class ClientePfServiceImpl implements ClientePfService {
     @Override
     public ResponseEntity<ResponseClientePfDTO> atualizar(RequestClientePfDTO dados, Long id) {
         var cliente = this.repository.findByIdAndAtivoTrue(id).orElseThrow(this::throwClienteNotFoundExeption);
-        this.factory.atualizaCliente(cliente, dados);
+        this.factory.atualizar(cliente, dados);
         this.repository.save(cliente);
         return ResponseEntity.ok(new ResponseClientePfDTO(cliente));
     }
