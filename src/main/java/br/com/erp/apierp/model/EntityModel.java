@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public abstract class EntityModel {
     private LocalDateTime entradaData;
     private LocalDateTime atualizacaoData;
+    private boolean ativo = true;
 
     @PrePersist
     public void prePersist() {

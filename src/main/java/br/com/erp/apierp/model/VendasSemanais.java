@@ -2,10 +2,7 @@ package br.com.erp.apierp.model;
 
 import br.com.erp.apierp.dto.request.RequestVendasDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -14,11 +11,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode(of = "id")
-public class VendasSemanais {
+@Setter
+@EqualsAndHashCode(of = "id", callSuper = true)
+public class VendasSemanais extends EntityModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
     private BigDecimal primeiraSemana = BigDecimal.ZERO;
     private BigDecimal segundaSemana = BigDecimal.ZERO;
