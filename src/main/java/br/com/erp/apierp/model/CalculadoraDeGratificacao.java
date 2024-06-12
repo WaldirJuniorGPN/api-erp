@@ -23,6 +23,7 @@ public class CalculadoraDeGratificacao extends EntityModel {
     private BigDecimal percentualPrimeiroColocado = BigDecimal.ZERO;
     private BigDecimal percentualSegundoColocado = BigDecimal.ZERO;
     private BigDecimal percentualTerceiroColocado = BigDecimal.ZERO;
+    private BigDecimal percentualDemaisColocados = BigDecimal.ZERO;
     private BigDecimal bonusPrimeiroColocado = BigDecimal.ZERO;
     private BigDecimal bonusSegundoColocado = BigDecimal.ZERO;
 

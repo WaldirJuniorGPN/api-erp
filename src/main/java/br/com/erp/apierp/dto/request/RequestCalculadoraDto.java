@@ -20,6 +20,9 @@ public record RequestCalculadoraDto(
         BigDecimal percentualTerceiroColocado,
         @NotNull
         @Min(0)
+        BigDecimal percentualDemaisColocados,
+        @NotNull
+        @Min(0)
         BigDecimal bonusPrimeiroColocado,
         @NotNull
         @Min(0)

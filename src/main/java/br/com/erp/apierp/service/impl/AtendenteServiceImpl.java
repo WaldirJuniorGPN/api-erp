@@ -82,7 +82,8 @@ public class AtendenteServiceImpl implements AtendenteService {
         var atendente = this.atendenteRepository.findByIdAndAtivoTrue(dto.idAtendnete()).orElseThrow(this::throwAtendenteNotFoundException);
         var loja = this.lojaRepository.findByIdAndAtivoTrue(dto.idLoja()).orElseThrow(this::throwAtendenteNotFoundException);
         atendente.setLoja(loja);
-        return null;
+        this.atendenteRepository.save(atendente);
+        return ResponseEntity.ok(new ResponseAtendenteDto(atendente));
     }
 
     private ControllerNotFoundException throwAtendenteNotFoundException() {
